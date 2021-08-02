@@ -305,6 +305,12 @@ const UICtrl = (function () {
         listItem.remove();
       });
     },
+    removeItemList: function () {
+      document.querySelector(UISelectors.itemList).style.display = "none";
+    },
+    showItemList: function () {
+      document.querySelector(UISelectors.itemList).style.display = "block";
+    },
   };
 
   // -----------------------------------------------------------
@@ -318,6 +324,8 @@ const AppCtrl = (function (ItemCtrl, StorageCtrl, UICtrl) {
   const loadEventListeners = function () {
     //  Get UI Selectors
     const UISelectors = UICtrl.getSelectors();
+
+    UICtrl.removeItemList();
 
     // Add item event
     document
@@ -363,6 +371,8 @@ const AppCtrl = (function (ItemCtrl, StorageCtrl, UICtrl) {
   //Add item to the List
   // -----------------------------------------------------------
   const itemAddSubmit = function (e) {
+    UICtrl.showItemList();
+
     //   Get item inputs
     const input = UICtrl.getItemInput();
 
@@ -468,6 +478,13 @@ const AppCtrl = (function (ItemCtrl, StorageCtrl, UICtrl) {
     // Delete from LS
     StorageCtrl.deleteItemFromStorage(currentItem.id);
 
+    // Fetch items from ItemCTrl
+    const items = ItemCtrl.getItems();
+    // Remove ul from page if list is empty
+    if (items.length === 0) {
+      UICtrl.removeItemList();
+    }
+
     // Clear input
     UICtrl.clearInput();
 
@@ -500,6 +517,8 @@ const AppCtrl = (function (ItemCtrl, StorageCtrl, UICtrl) {
 
     UICtrl.clearEditState();
 
+    UICtrl.removeItemList();
+
     e.preventDefault();
   };
   // -----------------------------------------------------------
@@ -513,8 +532,12 @@ const AppCtrl = (function (ItemCtrl, StorageCtrl, UICtrl) {
       // Fetch items from ItemCTrl
       const items = ItemCtrl.getItems();
 
-      // Populate Items
-      UICtrl.populateItemList(items);
+      if (items.length === 0) {
+        UICtrl.removeItemList();
+      } else {
+        // Populate Items
+        UICtrl.populateItemList(items);
+      }
 
       //   Load Event Listeners
       loadEventListeners();
