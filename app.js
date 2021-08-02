@@ -325,8 +325,6 @@ const AppCtrl = (function (ItemCtrl, StorageCtrl, UICtrl) {
     //  Get UI Selectors
     const UISelectors = UICtrl.getSelectors();
 
-    UICtrl.removeItemList();
-
     // Add item event
     document
       .querySelector(UISelectors.addBtn)
